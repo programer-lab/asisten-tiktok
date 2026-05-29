@@ -14,33 +14,29 @@ except:
     GEMINI_API_KEY = None
 
 # 🛑 PENGATURAN BISNIS (Kamu bisa ganti password-nya di sini sesuka hati)
-PASSWORD_PREMIUM = "rpl123" 
+PASSWORD_PREMIUM = "TiktokCuan2026" 
 
 # Inisialisasi hitungan uji coba gratis di browser user
 if "hitung_trial" not in st.session_state:
     st.session_state.hitung_trial = 0
 
-# 2. KOLOM PASSWORD (Akan terbuka otomatis jika trial masih ada)
 status_berlangganan = False
-
-# Tampilkan sisa trial di pojok atas
 sisa_trial = max(0, 3 - st.session_state.hitung_trial)
 
+# 2. SISTEM CEK TRIAL ATAU PREMIUM
 if sisa_trial > 0:
     st.info(f"🎁 Kamu memiliki **{sisa_trial} kali** uji coba gratis tersisa!")
-    status_berlangganan = True # Anggap premium selama trial masih ada
+    status_berlangganan = True
 else:
     st.error("🛑 Batas uji coba gratis kamu sudah habis (Maksimal 3x)!")
-    st.write("Silakan beli **Password Berlangganan** untuk akses tanpa batas. Hubungi Admin via WA: [085697287693]")
+    st.write("Silakan beli **Password Berlangganan** untuk akses tanpa batas. Hubungi Admin via WA: [08xxxxxxxxxx]")
     
-    # Munculkan kolom input password jika gratisannya sudah habis
     input_pass = st.text_input("🔑 Masukkan Password Berlangganan:", type="password")
     if input_pass == PASSWORD_PREMIUM:
         st.success("🎉 Password Benar! Akses Premium Terbuka ✨")
         status_berlangganan = True
-else:
-        if input_pass:
-            st.error("❌ Password salah, bro! Silakan cek kembali atau hubungi admin.")
+    elif input_pass != "":
+        st.error("❌ Password salah, bro! Silakan cek kembali atau hubungi admin.")
 
 # 3. KOTAK INPUT UTAMA
 topik_user = st.text_input(
@@ -57,7 +53,7 @@ if st.button("Buat Script Video! ✨", type="primary"):
     elif not GEMINI_API_KEY:
         st.error("🛑 API Key Gemini belum dimasukkan di pengaturan Secrets Streamlit!")
     else:
-        # Jika berhasil jalan, kurangi kuota trial si user
+        # Jika berhasil jalan dan masih pakai kuota gratis, kurangi kuotanya
         if st.session_state.hitung_trial < 3:
             st.session_state.hitung_trial += 1
             
@@ -79,6 +75,7 @@ if st.button("Buat Script Video! ✨", type="primary"):
                 st.markdown("---")
                 st.markdown(response.text)
                 st.markdown("---")
+                st.rerun() # Refresh halaman biar kuota langsung terupdate di layar
                 
             except Exception as e:
                 st.error(f"Waduh, ada gangguan koneksi ke AI: {e}")
