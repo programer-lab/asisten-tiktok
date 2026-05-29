@@ -13,22 +13,56 @@ try:
 except:
     GEMINI_API_KEY = None
 
-# 2. Membuat Kolom Input untuk Pengguna
+# 🛑 PENGATURAN BISNIS (Kamu bisa ganti password-nya di sini sesuka hati)
+PASSWORD_PREMIUM = "rpl123" 
+
+# Inisialisasi hitungan uji coba gratis di browser user
+if "hitung_trial" not in st.session_state:
+    st.session_state.hitung_trial = 0
+
+# 2. KOLOM PASSWORD (Akan terbuka otomatis jika trial masih ada)
+status_berlangganan = False
+
+# Tampilkan sisa trial di pojok atas
+sisa_trial = max(0, 3 - st.session_state.hitung_trial)
+
+if sisa_trial > 0:
+    st.info(f"🎁 Kamu memiliki **{sisa_trial} kali** uji coba gratis tersisa!")
+    status_berlangganan = True # Anggap premium selama trial masih ada
+else:
+    st.error("🛑 Batas uji coba gratis kamu sudah habis (Maksimal 3x)!")
+    st.write("Silakan beli **Password Berlangganan** untuk akses tanpa batas. Hubungi Admin via WA: [085697287693]")
+    
+    # Munculkan kolom input password jika gratisannya sudah habis
+    input_pass = st.text_input("🔑 Masukkan Password Berlangganan:", type="password")
+    if input_pass == PASSWORD_PREMIUM:
+        st.success("🎉 Password Benar! Akses Premium Terbuka ✨")
+        status_berlangganan = True
+else:
+        if input_pass:
+            st.error("❌ Password salah, bro! Silakan cek kembali atau hubungi admin.")
+
+# 3. KOTAK INPUT UTAMA
 topik_user = st.text_input(
     label="Apa topik video yang ingin kamu buat?", 
     placeholder="Contoh: Tips jualan online shop untuk pemula"
 )
 
-# 3. Logika Tombol Ketika Diklik
+# 4. LOGIKA TOMBOL GENERATE AI
 if st.button("Buat Script Video! ✨", type="primary"):
-    if not topik_user:
+    if not status_berlangganan:
+        st.error("🛑 Maaf, kamu tidak bisa membuat script. Silakan masukkan password langganan yang valid terlebih dahulu!")
+    elif not topik_user:
         st.warning("⚠️ Tolong isi topiknya dulu ya bro/sist!")
     elif not GEMINI_API_KEY:
         st.error("🛑 API Key Gemini belum dimasukkan di pengaturan Secrets Streamlit!")
     else:
+        # Jika berhasil jalan, kurangi kuota trial si user
+        if st.session_state.hitung_trial < 3:
+            st.session_state.hitung_trial += 1
+            
         with st.spinner("Harap tunggu, AI lagi nulis script terbaik buat kamu... 🤖"):
             try:
-                # Menggunakan library standar yang stabil di Streamlit Cloud
                 genai.configure(api_key=GEMINI_API_KEY)
                 model = genai.GenerativeModel('gemini-2.5-flash')
                 
