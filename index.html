@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Graduation! 🎓✨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #ffe5ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Container Slide */
+        .card-container {
+            width: 350px;
+            height: 520px;
+            background: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 12px 35px rgba(251, 111, 146, 0.35);
+            border: 4px solid #ffb3c6;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+        }
+
+        /* Sistem Slide */
+        .slide {
+            position: absolute;
+            width: 85%;
+            height: 75%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(50px) scale(0.9);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        /* Elemen Lucu / Animasi */
+        .emoji {
+            font-size: 75px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        h1 {
+            color: #fb6f92;
+            font-size: 24px;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        p {
+            color: #ff8fab;
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        /* Tombol Navigasi */
+        .btn-nav {
+            position: absolute;
+            bottom: 35px;
+            background: #ff7096;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 112, 150, 0.4);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .btn-nav:hover {
+            background: #ff5c8a;
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 112, 150, 0.5);
+        }
+
+        .btn-nav:active {
+            transform: scale(0.95) translateY(0);
+        }
+
+        /* Animasi Bouncing Efek Lucu */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        /* Efek Hujan Konfeti Pink */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffb3c6;
+            animation: confettiFall 3.5s linear infinite;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(540px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <div id="confetti-wrapper"></div>
+
+        <div class="slide active" id="slide1">
+            <div class="emoji">👀</div>
+            <h1>Cieee... Ada yang bau-bau orang sukses nih!</h1>
+            <p>Coba klik tombol di bawah deh, ada kejutan kecil buat kamu...</p>
+        </div>
+
+        <div class="slide" id="slide2">
+            <div class="emoji">🎓✨</div>
+            <h1>HAPPY GRADUATION!</h1>
+            <p>Akhirnya ya, setelah berabad-abad bertarung melawan revisian dan dosen pembimbing... LULUS JUGA! 🎉</p>
+        </div>
+
+        <div class="slide" id="slide3">
+            <div class="emoji">🦖🐾</div>
+            <h1>Beban Bumi Berkurang Satu!</h1>
+            <p>Selamat menempuh hidup baru di dunia nyata (alias dunia cari kerjaan). Semangat terus ya, kamu keren banget! 💖</p>
+        </div>
+
+        <div class="slide" id="slide4">
+            <div class="emoji">🥳🍰</div>
+            <h1>Proud of You!</h1>
+            <p>Jangan lupa traktirannya ditunggu ya! Makan-makan kuy~ Pokoknya doa terbaik buat masa depanmu! 🌟</p>
+        </div>
+
+        <button class="btn-nav" id="nextBtn" onclick="nextSlide()">Lanjut ✨</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function nextSlide() {
+            // Hapus kelas active dari slide sekarang
+            document.getElementById(`slide${currentSlide}`).classList.remove('active');
+            
+            // Pindah ke slide berikutnya
+            currentSlide++;
+            
+            // Jika sudah melebihi slide terakhir, balik ke slide 1
+            if (currentSlide > totalSlides) {
+                currentSlide = 1;
+            }
+
+            // Aktifkan slide baru
+            document.getElementById(`slide${currentSlide}`).classList.add('active');
+
+            // Ubah teks tombol jika di slide terakhir
+            const btn = document.getElementById('nextBtn');
+            if (currentSlide === totalSlides) {
+                btn.innerText = "Ulangi 💖";
+            } else {
+                btn.innerText = "Lanjut ✨";
+            }
+        }
+
+        // Membuat efek hujan konfeti pink secara dinamis
+        const wrapper = document.getElementById('confetti-wrapper');
+        const colors = ['#ff7096', '#ff8fab', '#ffb3c6', '#ffe5ec', '#f9bec7'];
+        
+        for (let i = 0; i < 35; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.top = (Math.random() * -50) + 'px';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 3.5 + 's';
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            // Variasi ukuran konfeti biar natural
+            const size = (Math.random() * 6 + 6) + 'px';
+            confetti.style.width = size;
+            confetti.style.height = size;
+            wrapper.appendChild(confetti);
+        }
+    </script>
+</body>
+</html>
